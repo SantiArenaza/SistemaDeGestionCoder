@@ -15,8 +15,8 @@ namespace SistemaDeGestion.Controllers
         {
             try
             {
-                List<Producto> lista = repositorio.listarproductos();
-                return Ok(lista);
+                List<Producto> lista = repositorio.listarproductos(); //llamo a la funcion listarproductos dentro de la clase producto repositorio y guardo la lista
+                return Ok(lista); //retorno la lista
             }
             catch (Exception ex)
             {

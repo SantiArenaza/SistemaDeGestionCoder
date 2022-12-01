@@ -4,7 +4,7 @@ namespace SistemaDeGestion.Modelos
 {
     public class Producto
     {
-
+        //Atributos de la clase productos
         public long Id { get; set; }
         public string Descripcion { get; set; }
         public double PrecioCompra { get; set; }
@@ -12,6 +12,7 @@ namespace SistemaDeGestion.Modelos
         public int Stock { get; set; }
         public long IdUsuario { get; set; }
 
+        //constructores de la clase producto
         public Producto()
         {
             Id=0;
