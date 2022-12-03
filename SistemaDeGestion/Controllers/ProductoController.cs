@@ -23,5 +23,63 @@ namespace SistemaDeGestion.Controllers
                 return Problem(ex.Message);
             }
         }
+
+        [HttpPost] //accion para agregar un producto
+        public ActionResult Post([FromBody] Producto producto) //frombody toma el producto desde el cuerpo (lo ingreso desde la API)
+        {
+            try
+            {
+                repositorio.crearProducto(producto);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
+
+        [HttpDelete]
+        public ActionResult Delete([FromBody] long id) //accion para borrar un producto 
+        {
+            try
+            {
+                bool seElimino = repositorio.eliminarProducto(id);
+                if (seElimino)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return NotFound(); //arroja error 404 si no se encuentra registro, osea id a eliminar en este caso
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public ActionResult<Producto> Put(long id, [FromBody] Producto productoAActualizar)
+        {
+            try
+            {
+              Producto? productoActualizado = repositorio.actualizarProducto(id, productoAActualizar);
+              if (productoActualizado != null)
+                {
+                    return Ok(productoActualizado);
+                }
+              else
+                {
+                    return NotFound("El producto no fue encontrado");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+
+        }
     }
 }

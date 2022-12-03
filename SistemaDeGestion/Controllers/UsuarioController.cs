@@ -23,5 +23,27 @@ namespace SistemaDeGestion.Controllers
                 return Problem(ex.Message);
             }
         }
+
+        [HttpPut]
+        public ActionResult<Usuario> Put(long id, [FromBody] Usuario usuarioAActualizar)
+        {
+            try
+            {
+                Usuario? usuarioActualizado = repositorio.actualizarUsuario(id, usuarioAActualizar);
+                if (usuarioActualizado != null)
+                {
+                    return Ok(usuarioActualizado);
+                }
+                else
+                {
+                    return NotFound("El usuario no fue encontrado");
+                }
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+
+        }
     }
 }

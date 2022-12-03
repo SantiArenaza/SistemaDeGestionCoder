@@ -1,4 +1,5 @@
 ﻿using SistemaDeGestion.Modelos;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace SistemaDeGestion.Repositorios
@@ -60,6 +61,32 @@ namespace SistemaDeGestion.Repositorios
                 throw;
             }
             return listaVentas;
+
+        }
+
+        public void agregarVenta(Ventas venta)  //funcion para agregar nueva venta en la base de datos
+        {
+
+            if (conexion == null)
+            {
+                throw new Exception("Conexion no establecida");
+            }
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO Venta(Comentarios, IdUsuario) VALUES(@comentario, @idUsuario)", conexion)) //comando agregar sql
+                {
+                    conexion.Open(); //abro la conexion con la base de datos
+                    cmd.Parameters.Add(new SqlParameter("comentario", SqlDbType.VarChar) { Value = venta.Comentarios });
+                    cmd.Parameters.Add(new SqlParameter("idUsuario", SqlDbType.BigInt) { Value = venta.IdUsuario });
+                    cmd.ExecuteNonQuery();
+
+                    conexion.Close(); //cierro conexion
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
         }
     }
