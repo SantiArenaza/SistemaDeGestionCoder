@@ -89,5 +89,32 @@ namespace SistemaDeGestion.Repositorios
             }
 
         }
+
+
+        public bool eliminarVenta(long id)  //funcion para eliminar producto en la base de datos por id
+        {
+
+            if (conexion == null)
+            {
+                throw new Exception("Conexion no establecida");
+            }
+            try
+            {
+                int filasAfectadas;
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM Venta WHERE id=@id", conexion)) //comando delete sql
+                {
+                    conexion.Open(); //abro la conexion con la base de datos
+                    cmd.Parameters.Add(new SqlParameter("id", SqlDbType.BigInt) { Value = id });
+                    filasAfectadas = cmd.ExecuteNonQuery();
+                    conexion.Close(); //cierro conexion
+                    return filasAfectadas > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
     }
 }

@@ -61,7 +61,7 @@ namespace SistemaDeGestion.Controllers
         }
 
         [HttpPut]
-        public ActionResult<Producto> Put(long id, [FromBody] Producto productoAActualizar)
+        public ActionResult<Producto> Put(long id, [FromBody] Producto productoAActualizar) //accion para actualizar un producto
         {
             try
             {

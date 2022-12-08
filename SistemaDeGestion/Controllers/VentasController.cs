@@ -37,5 +37,28 @@ namespace SistemaDeGestion.Controllers
                 return Problem(ex.Message);
             }
         }
+
+
+        [HttpDelete]
+        public ActionResult Delete([FromBody] long id) //accion para borrar una venta desde el id
+        {
+            try
+            {
+                bool seElimino = repositorio.eliminarVenta(id);
+                if (seElimino)
+                {
+                    return Ok();
+                }
+                else
+                {
+                    return NotFound(); //arroja error 404 si no se encuentra registro, osea id a eliminar en este caso
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
     }
 }

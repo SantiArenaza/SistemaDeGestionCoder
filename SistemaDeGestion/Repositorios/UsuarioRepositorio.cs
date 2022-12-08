@@ -2,6 +2,7 @@
 using System.Data;
 using System.Data.SqlClient;
 
+
 namespace SistemaDeGestion.Repositorios
 {
     public class UsuarioRepositorio
@@ -173,6 +174,108 @@ namespace SistemaDeGestion.Repositorios
                     return usuarioAAactualizar;
                 }
 
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
+
+
+        public Usuario? obtenerUsuarioPorNombreUsuario(string nombreUsuario)  //obtengo usuario por id
+        {
+            if (conexion == null)
+            {
+                throw new Exception("Conexion no establecida");
+            }
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM Usuario WHERE NombreUsuario=@nombreUsuario", conexion)) //comando de consulta sql
+                {
+                    conexion.Open(); //abro la conexion con la base de datos
+                    cmd.Parameters.Add(new SqlParameter("nombreUsuario", SqlDbType.VarChar) { Value = nombreUsuario });
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            reader.Read();
+                            Usuario usuario = obtenerUsuarioDesdeReader(reader);
+                            return usuario;
+                        }
+                        else
+                        {
+                            return null;
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                conexion.Close(); //cierro conexion
+            }
+
+        }
+
+        public bool eliminarUsuario(long id)  //funcion para eliminar usuario en la base de datos por id
+        {
+
+            if (conexion == null)
+            {
+                throw new Exception("Conexion no establecida");
+            }
+            try
+            {
+                int filasAfectadas;
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM Usuario WHERE Id=@id", conexion)) //comando delete sql
+                {
+                    conexion.Open(); //abro la conexion con la base de datos
+                    cmd.Parameters.Add(new SqlParameter("id", SqlDbType.BigInt) { Value = id });
+                    filasAfectadas = cmd.ExecuteNonQuery();
+                    conexion.Close(); //cierro conexion
+                    return filasAfectadas > 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+        }
+
+        public void crearUsuario(Usuario usuario)  //funcion para crear nuevo producto en la base de datos
+        {
+
+            if (conexion == null)
+            {
+                throw new Exception("Conexion no establecida");
+            }
+            try
+            {
+                Usuario? chekUsuario = obtenerUsuarioPorNombreUsuario(usuario.NombreUsuario);
+                if (chekUsuario == null)
+                {
+                    using (SqlCommand cmd = new SqlCommand("INSERT INTO Usuario (Nombre, Apellido, NombreUsuario, Contraseña, Mail) VALUES(@nombre, @apellido, @nombreUsuario, @contraseña, @mail)", conexion)) //comando para insertar fila en tabla sql
+                    {
+                    conexion.Open(); //abro la conexion con la base de datos
+                    cmd.Parameters.Add(new SqlParameter("nombre", SqlDbType.VarChar) { Value = usuario.Nombre });
+                    cmd.Parameters.Add(new SqlParameter("apellido", SqlDbType.VarChar) { Value = usuario.Apellido });
+                    cmd.Parameters.Add(new SqlParameter("nombreUsuario", SqlDbType.VarChar) { Value = usuario.NombreUsuario });
+                    cmd.Parameters.Add(new SqlParameter("contraseña", SqlDbType.VarChar) { Value = usuario.Contraseña });
+                    cmd.Parameters.Add(new SqlParameter("mail", SqlDbType.VarChar) { Value = usuario.Mail });
+                    cmd.ExecuteNonQuery();
+                    conexion.Close(); //cierro conexion
+                    }
+                }
+                else
+                {
+                    usuario.NombreUsuario="UsuarioExistente";  
+                }
             }
             catch (Exception ex)
             {
