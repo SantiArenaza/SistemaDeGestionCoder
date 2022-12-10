@@ -1,4 +1,5 @@
 ﻿using SistemaDeGestion.Modelos;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace SistemaDeGestion.Repositorios
@@ -61,6 +62,32 @@ namespace SistemaDeGestion.Repositorios
                 throw;
             }
             return listaProductosVendidos;
+
+        }
+
+        public void agregarProductoVendido(ProductosVendidos productoVendido)  //funcion para agregar nueva venta en la base de datos
+        {
+
+            if (conexion == null)
+            {
+                throw new Exception("Conexion no establecida");
+            }
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO ProductoVendido(Stock, IdProducto) VALUES(@stock, @idProducto)", conexion)) //comando agregar sql
+                {
+                    conexion.Open(); //abro la conexion con la base de datos
+                    cmd.Parameters.Add(new SqlParameter("stock", SqlDbType.VarChar) { Value = productoVendido.Stock });
+                    cmd.Parameters.Add(new SqlParameter("idProducto", SqlDbType.BigInt) { Value = productoVendido.IdProducto });
+                    cmd.ExecuteNonQuery();
+
+                    conexion.Close(); //cierro conexion
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
 
         }
 

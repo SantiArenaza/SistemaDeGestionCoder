@@ -6,6 +6,8 @@
         public string Comentarios { get; set; }
         public long IdUsuario { get; set; }
 
+        public List<ProductosVendidos>? ProductosVendidos { get; set; }
+
         public Ventas()
         {
             Id = 0;
