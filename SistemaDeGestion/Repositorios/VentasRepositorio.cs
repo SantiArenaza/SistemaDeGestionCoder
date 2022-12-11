@@ -1,6 +1,7 @@
 ﻿using SistemaDeGestion.Modelos;
 using System.Data;
 using System.Data.SqlClient;
+using System.Reflection.Metadata.Ecma335;
 
 namespace SistemaDeGestion.Repositorios
 {
@@ -64,7 +65,7 @@ namespace SistemaDeGestion.Repositorios
 
         }
 
-        public void agregarVenta(Ventas venta)  //funcion para agregar nueva venta en la base de datos
+        public long agregarVenta(Ventas venta)  //funcion para agregar nueva venta en la base de datos
         {
 
             if (conexion == null)
@@ -73,15 +74,17 @@ namespace SistemaDeGestion.Repositorios
             }
             try
             {
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO Venta(Comentarios, IdUsuario) VALUES(@comentario, @idUsuario)", conexion)) //comando agregar sql
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO Venta(Comentarios, IdUsuario) VALUES(@comentario, @idUsuario); SELECT SCOPE_IDENTITY()", conexion)) //comando agregar sql
                 {
                     conexion.Open(); //abro la conexion con la base de datos
                     cmd.Parameters.Add(new SqlParameter("comentario", SqlDbType.VarChar) { Value = venta.Comentarios });
                     cmd.Parameters.Add(new SqlParameter("idUsuario", SqlDbType.BigInt) { Value = venta.IdUsuario });
                     cmd.ExecuteNonQuery();
-
+                    long idVenta = Convert.ToInt64(cmd.ExecuteScalar());
                     conexion.Close(); //cierro conexion
+                    return idVenta;
                 }
+
             }
             catch (Exception ex)
             {

@@ -74,11 +74,12 @@ namespace SistemaDeGestion.Repositorios
             }
             try
             {
-                using (SqlCommand cmd = new SqlCommand("INSERT INTO ProductoVendido(Stock, IdProducto) VALUES(@stock, @idProducto)", conexion)) //comando agregar sql
+                using (SqlCommand cmd = new SqlCommand("INSERT INTO ProductoVendido(Stock, IdProducto, Idventa) VALUES(@stock, @idProducto, @idVenta)", conexion)) //comando agregar sql
                 {
                     conexion.Open(); //abro la conexion con la base de datos
-                    cmd.Parameters.Add(new SqlParameter("stock", SqlDbType.VarChar) { Value = productoVendido.Stock });
+                    cmd.Parameters.Add(new SqlParameter("stock", SqlDbType.Int) { Value = productoVendido.Stock });
                     cmd.Parameters.Add(new SqlParameter("idProducto", SqlDbType.BigInt) { Value = productoVendido.IdProducto });
+                    cmd.Parameters.Add(new SqlParameter("idVenta", SqlDbType.BigInt) { Value = productoVendido.IdVenta });
                     cmd.ExecuteNonQuery();
 
                     conexion.Close(); //cierro conexion
@@ -90,9 +91,6 @@ namespace SistemaDeGestion.Repositorios
             }
 
         }
-
-
-
 
     }
 }

@@ -225,6 +225,7 @@ namespace SistemaDeGestion.Repositorios
                     cmd.Parameters.Add(new SqlParameter("id", SqlDbType.BigInt) { Value = id });
                     cmd.ExecuteNonQuery();
                     return productoAAactualizar;
+                    conexion.Close();
                 }
 
             }
@@ -232,6 +233,39 @@ namespace SistemaDeGestion.Repositorios
             {
                 throw;
             }
+
+        }
+
+        public void actualizarStockProducto(long id, int stock)
+        {
+            
+            if (conexion == null)
+            {
+                throw new Exception("Conexion no establecida");
+            }
+            try
+            {
+                Producto? producto = obtenerProducto(id);
+               
+                int restaStock=producto.Stock-stock;
+              
+
+                using (SqlCommand cmd = new SqlCommand("UPDATE Producto SET Stock=@stock WHERE Id=@id", conexion))
+                {
+                    conexion.Open(); //abro la conexion con la base de datos
+                    cmd.Parameters.Add(new SqlParameter("id", SqlDbType.BigInt) { Value = id });
+                    cmd.Parameters.Add(new SqlParameter("stock", SqlDbType.Int) { Value = restaStock });
+                    cmd.ExecuteNonQuery();
+                    conexion.Close();
+                }
+
+            }
+
+            catch (Exception ex)
+            {
+                throw;
+            }
+
 
         }
 
