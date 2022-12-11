@@ -33,6 +33,7 @@ namespace SistemaDeGestion.Controllers
                 repositorioVentas.agregarVenta(venta);
                 repositorio.agregarProductoVendido(venta.ProductosVendidos);
                 return Ok();
+               
             }
             catch (Exception ex)
             {
