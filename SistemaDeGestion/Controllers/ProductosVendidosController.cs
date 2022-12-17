@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SistemaDeGestion.Modelos;
 using SistemaDeGestion.Repositorios;
+using System.Collections.Immutable;
 using System.Security.Cryptography.X509Certificates;
 
 namespace SistemaDeGestion.Controllers
@@ -45,6 +46,45 @@ namespace SistemaDeGestion.Controllers
                 }
                 return Ok();
                
+            }
+            catch (Exception ex)
+            {
+                return Problem(ex.Message);
+            }
+        }
+
+        [HttpGet("{idUsuario}")]
+        public IActionResult Get(long idUsuario)  //accion de consulta. Consulto los productos que vendio cada usuario a partir de su ID
+        {
+            try
+            {
+                List<Ventas> lista = repositorioVentas.listarVentasUsuario(idUsuario); //listo las ventas del usuario
+                List<ProductosVendidos> listaProductosVendidos = new List<ProductosVendidos>();
+                List<ProductosVendidos> listaProductosVendidosUsuario = new List<ProductosVendidos>();
+                Producto? productosVendidos = new Producto();
+                List<Producto> listaProductos = new List<Producto>();
+
+                long[] idVenta = new long[lista.Count];
+                for (var i = 0; i < lista.Count; i++) //recorro el for para ir alistando los id de los productos que se vendieron en cada venta
+                {
+                    idVenta[i] = lista[i].Id;
+                    listaProductosVendidos = repositorio.listarProductosVendidosUsuario(idVenta[i]);
+                    for (var d = 0; d < listaProductosVendidos.Count; d++)
+                    {
+                        listaProductosVendidosUsuario.Add(listaProductosVendidos[d]);
+                    }     
+                }
+
+                long[] idProducto = new long[listaProductosVendidosUsuario.Count];
+                
+                for (var i = 0; i < listaProductosVendidosUsuario.Count; i++) //recorro el for para ir alistando los productos que se vendieron en cada venta a partir de su id
+                {
+                    idProducto[i] = listaProductosVendidosUsuario[i].IdProducto;
+                    productosVendidos = repositorioProducto.obtenerProducto(idProducto[i]);
+                    listaProductos.Add(productosVendidos);
+                }
+
+                return Ok(listaProductos);
             }
             catch (Exception ex)
             {

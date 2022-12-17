@@ -11,6 +11,7 @@ namespace SistemaDeGestion.Modelos
         public double PrecioVenta { get; set; }
         public int Stock { get; set; }
         public long IdUsuario { get; set; }
+        public long IdVenta { get; set; }
 
         //constructores de la clase producto
         public Producto()
@@ -21,10 +22,11 @@ namespace SistemaDeGestion.Modelos
             PrecioVenta = 0;
             Stock = 0;
             IdUsuario = 0;
+            IdVenta = -1; //lo uso para cuando traigo solo los productos vendido de manera de tener el id de venta
             
         }
 
-        public Producto(long id, string descripcion, double preciocompra, double precioventa,int stock, long idusuario)
+        public Producto(long id, string descripcion, double preciocompra, double precioventa,int stock, long idusuario, long idVenta)
         {
             Id = id;
             Descripcion = descripcion;
@@ -32,6 +34,7 @@ namespace SistemaDeGestion.Modelos
             PrecioVenta = precioventa;
             Stock = stock;
             IdUsuario = idusuario;
+            IdVenta = idVenta;
         }
 
 

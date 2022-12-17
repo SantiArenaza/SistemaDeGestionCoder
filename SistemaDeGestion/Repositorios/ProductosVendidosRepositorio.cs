@@ -92,5 +92,47 @@ namespace SistemaDeGestion.Repositorios
 
         }
 
+        public List<ProductosVendidos> listarProductosVendidosUsuario(long idVenta)
+        {
+            List<ProductosVendidos> listaProductosVendidos = new List<ProductosVendidos>();
+            if (conexion == null)
+            {
+                throw new Exception("Conexion no establecida");
+            }
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM ProductoVendido WHERE IdVenta=@idVenta", conexion))
+                {
+                    conexion.Open();
+                    cmd.Parameters.Add(new SqlParameter("idVenta", SqlDbType.BigInt) { Value = idVenta });
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    ProductosVendidos productosVendidos = new ProductosVendidos();
+                                    productosVendidos.Id = Convert.ToInt64(reader["Id"]);
+                                    productosVendidos.Stock = int.Parse(reader["Stock"].ToString());
+                                    productosVendidos.IdProducto = Convert.ToInt64(reader["IdProducto"]);
+                                    productosVendidos.IdVenta = Convert.ToInt64(reader["IdVenta"]);
+                                    listaProductosVendidos.Add(productosVendidos);
+                                }
+                            }
+
+                        }
+                    }
+                    conexion.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return listaProductosVendidos;
+
+        }
+
     }
 }

@@ -119,5 +119,46 @@ namespace SistemaDeGestion.Repositorios
             }
 
         }
+
+        public List<Ventas> listarVentasUsuario(long idUsuario)
+        {
+            List<Ventas> listaVentas = new List<Ventas>();
+            if (conexion == null)
+            {
+                throw new Exception("Conexion no establecida");
+            }
+            try
+            {
+                using (SqlCommand cmd = new SqlCommand("SELECT * FROM Venta WHERE IdUsuario=@idUsuario", conexion))
+                {
+                    conexion.Open();
+                    cmd.Parameters.Add(new SqlParameter("idUsuario", SqlDbType.BigInt) { Value = idUsuario });
+                    {
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.HasRows)
+                            {
+                                while (reader.Read())
+                                {
+                                    Ventas ventas = new Ventas();
+                                    ventas.Id = Convert.ToInt64(reader["Id"]);
+                                    ventas.Comentarios = reader["Comentarios"].ToString();
+                                    ventas.IdUsuario = Convert.ToInt64(reader["Idusuario"].ToString());
+                                    listaVentas.Add(ventas);
+                                }
+                            }
+
+                        }
+                    }
+                    conexion.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            return listaVentas;
+
+        }
     }
 }
